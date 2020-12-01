@@ -9,11 +9,13 @@ fetch('http://voting-back.atwebpages.com/index.php',{
     method:'POST',
     body:formData
 }).then(response => response.text()).then(response =>{
+    // console.log(response);
     if(JSON.parse( response)[0].message==="success"){
-        location.href="showdata.html";
+        location.href="showdata.html?vid="+u_password;
     }
     else{
-        console.log("not");
+        document.getElementById("alreadyvoted").innerHTML="You must have already casted your vote if not contact service desk";
+        // console.log("not");
     }
 
 })

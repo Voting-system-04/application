@@ -1,16 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <form id="myform" method="post" action="image.html">
+    <form id="detailsform" method="GET">
         <h1>details page</h1>
-        <!-- <input type="text" id="username" placeholder="name"></input> -->
-        <!-- <input type="text" id="vid" placeholder="voter id"></input> -->
-        <button>continue</button>
+        <br>
+        <h2>Voter id <p id="voter"></p>
+        </h2>
+        <h2>Adhar id <p id="adhar"></p>
+        </h2>
+        <h2>contact <p id="contact"></p>
+        </h2>
+        <h2>address <p id="address"></p>
+        </h2>
+        <button onclick="imagepage()">continue</button>
+        <a href="index.html">Not me</a>
     </form>
+    <script>
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var paramValue = url.searchParams.get('vid');
+        // console.log("pa", paramValue);
+        document.getElementById('detailsform').addEventListener('submit', e => {
+            e.preventDefault();
+        })
+        var formData = new FormData();
+        formData.append("voterid", paramValue);
+        fetch('http://voting-back.atwebpages.com/details.php', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.text()).then(response => {
+            console.log(response);
+            if (JSON.parse(response)[0].message === "success") {
+                document.getElementById("voter").innerHTML = JSON.parse(response)[0].voter_id;
+                document.getElementById("adhar").innerHTML = JSON.parse(response)[0].adhar;
+                document.getElementById("contact").innerHTML = JSON.parse(response)[0].contactno;
+                document.getElementById("address").innerHTML = JSON.parse(response)[0].address;
+            }
+            else {
+                console.log("not");
+            }
+
+        })
+            .catch(err => console.log(err));
+
+        function imagepage() {
+            console.log("gfgf");
+            location.href = "image.html?vid=" + paramValue;
+        }
+    </script>
 </body>
+
 </html>

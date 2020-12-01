@@ -1,4 +1,11 @@
 
+
+var url_string = window.location.href;
+var url = new URL(url_string);
+var paramValue = url.searchParams.get('vid');
+// console.log("pa", paramValue);
+
+
 // The video
 let video;
 // For displaying the label
@@ -39,19 +46,23 @@ function draw() {
   fill(255);
   text(label, width / 2, height - 16);
 
+  if(label=="shubham"){
+    location.href="timer.html?vid="+paramValue;
+    // setTimeout(function(){ alert("Hello"); }, 3000);
+  }
   // Pick an emoji, the "default" is train
-//   let emoji = "🚂";
-//   if (label == "Rainbow") {
-//     emoji = "🌈";
-//   } else if (label == "Unicorn") {
-//     emoji = "🦄";
-//   } else if (label == "Ukulele") {
-//     emoji = "🎸";
-//   }
+  //   let emoji = "🚂";
+  //   if (label == "Rainbow") {
+  //     emoji = "🌈";
+  //   } else if (label == "Unicorn") {
+  //     emoji = "🦄";
+  //   } else if (label == "Ukulele") {
+  //     emoji = "🎸";
+  //   }
 
   // Draw the emoji
-//   textSize(256);
-//   text(emoji, width / 2, height / 2);
+  //   textSize(256);
+  //   text(emoji, width / 2, height / 2);
 }
 
 // STEP 3: Get the classification!
@@ -63,5 +74,6 @@ function gotResults(error, results) {
   }
   // Store the label and classify again!
   label = results[0].label;
-  classifyVideo();
+  // setTimeout(function(){ alert("Hello"); }, 3000);
+  // classifyVideo();
 }
