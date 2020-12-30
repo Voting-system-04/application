@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<title>QR SCAN</title>
+		<style>
+			body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#output {
+  border: 4px solid black;
+  height: 360px;
+  width: 640px;
+	margin-left:-110px;
+}
+
+#sidebar    {
+    width: 200px;
+    height: 400px;
+    float: left;
+}
+
+#wrap  {
+    width: 570px;
+    background: red;
+    height: 370px;
+    margin-left: 540px;
+}
+			#error{
+				color:red;
+				font-weight: 600;
+				font-size: 23px;
+			}
+			#tit{
+				background-color:aqua;
+				color:black;
+				font-weight: 700;
+				font-size: 30px;
+				width:640px;
+				text-align: center;
+				margin-left:-110px;
+				margin-top: -40px;
+				margin-bottom:3px;
+			}
+			#image{
+				width:600px;
+				height:370px;
+				background-repeat: no-repeat;
+				
+			}
+        </style>
+	</head>
+	<body>
+		<div id="main">
+			<div id="sidebar">
+				<p id="tit">QR SCANNER</p>
+				<video id="output"></video>
+                <p id="error"></p>
+			</div>
+			<div id="wrap">
+				<img src="qr.png" id="image">
+			</div>
+		</div>
+		<script type="text/javascript">
+			function detectSupport() {
+  if(!navigator.mediaDevices) {
+    alert("Not supproted");
+    return false;
+  }
+  if (!('pictureInPictureEnabled' in document)) {
+  alert('The Picture-in-Picture Web API is not available.');
+    return false;
+}
+else if (!document.pictureInPictureEnabled) {
+  alert('The Picture-in-Picture Web API is disabled.');
+  return false;
+}
+  return true;
+}
+
+const videoEl = document.getElementById("output");
+const pipBtn = document.getElementById("pipBtn");
+
+async function requestPip() {
+  try {
+    await videoEl.requestPictureInPicture();
+    pipBtn.disabled = true;
+  } catch(err) {
+    errorEl.innerHTML = `Sorry! Live Capture Error because of ${err.message}`;
+  }
+}
+
+async function loadVideo() {
+  try {
+    const constraints = { audio: false, video: { width: 1280, height: 720 } };  
+  const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+  videoEl.srcObject = mediaStream;
+  videoEl.onloadedmetadata = (e) => {
+    videoEl.play();
+    requestPip();
+  };
+  } catch(err) {
+    const errorEl = document.getElementById("error");
+    errorEl.innerHTML = `Sorry! Live Capture Error because of ${err.message}`;
+  }
+}
+
+function init() {
+  if(!detectSupport()) {
+    return;
+  }
+  loadVideo();
+  pipBtn.addEventListener("click", requestPip);
+  videoEl.addEventListener('leavepictureinpicture', () => {
+    pipBtn.disabled = false;
+  });
+}
+
+init();
+
+		</script>
+	</body>
+</html>
